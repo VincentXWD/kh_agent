@@ -1,0 +1,26 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;kh_agent&gt;">
+    <CLASSES>
+      <root url="file://$USER_HOME$/gopath/src/golang.org" />
+      <root url="file://$USER_HOME$/gopath/src/isprec" />
+      <root url="file://$USER_HOME$/gopath/src/ipstat" />
+      <root url="file://$USER_HOME$/gopath/src/gopkg.in" />
+      <root url="file://$USER_HOME$/gopath/src/gs.baishancloud.com" />
+      <root url="file://$USER_HOME$/gopath/src/qiniupkg.com" />
+      <root url="file://$USER_HOME$/gopath/src/github.com" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/gopath/src/golang.org" />
+      <root url="file://$USER_HOME$/gopath/src/isprec" />
+      <root url="file://$USER_HOME$/gopath/src/ipstat" />
+      <root url="file://$USER_HOME$/gopath/src/gopkg.in" />
+      <root url="file://$USER_HOME$/gopath/src/gs.baishancloud.com" />
+      <root url="file://$USER_HOME$/gopath/src/qiniupkg.com" />
+      <root url="file://$USER_HOME$/gopath/src/github.com" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>

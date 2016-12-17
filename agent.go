@@ -1,33 +1,51 @@
 package main
 
 import (
-	"net/http"
 	log "github.com/Sirupsen/logrus"
-	"io/ioutil"
-	"io"
-	"os"
+	"strconv"
+	"regexp"
+	"github.com/opesun/goquery"
+	"time"
 )
 
-func Handler(w http.ResponseWriter, r *http.Request) {
-	res, err := http.DefaultClient.Do(r)
-	defer res.Body.Close()
-	if err != nil {	log.Panicln(err.Error()) }
-	for k, v := range res.Header {
-		for _, vv := range v {
-			w.Header().Add(k, vv)
-		}
+const (
+	SAVE_PATH = "kproxy.orz"
+	PROXY_URL = "http://www.kuaidaili.com/free/inha/"
+)
+var (
+	IP_REGEXP = regexp.MustCompile(`[\d]+\.[\d]+\.[\d]+\.[\d]+\n\s+[\d]+`)
+	IP_DETAIL_REGEXP = regexp.MustCompile(`[\d]+\.[\d]+\.[\d]+\.[\d]+`)
+	INT_REGEXP = regexp.MustCompile(`\s[\d]+`)
+)
+
+func UrlGetter(num int) string {
+	return PROXY_URL + strconv.Itoa(num)
+}
+
+func GetProxy(Url string) {
+	nod, err := goquery.ParseUrl(Url)
+	if err != nil {
+		log.Errorln(err.Error())
+		return
 	}
-	for _, c := range res.Cookies() {
-		w.Header().Add("Set-Cookie", c.Raw)
+	ret := nod.Text()
+	ips := IP_REGEXP.FindAll([]byte(ret), -1)
+	var port []string = make([]string, len(ips))
+	var str string = ""
+	for i := 0; i < len(ips); i++ {
+		port[i] = string(INT_REGEXP.FindAll(ips[i], -1)[0])[1:]
+		ips[i] = IP_DETAIL_REGEXP.FindAll(ips[i], -1)[0]
+		str += string(ips[i])+":"+port[i]+"\n"
 	}
-	w.WriteHeader(res.StatusCode)
-	result, err := ioutil.ReadAll(res.Body)
-	if err != nil && err != io.EOF { log.Panicln(err.Error()) }
-	w.Write(result)
+	AppendFile("./", SAVE_PATH, str)
 }
 
 func main() {
-	http.HandleFunc("/", Handler)
-	log.Infoln("Starting serving on port ", os.Args[1])
-	http.ListenAndServe(":"+os.Args[1], nil)
+	log.Infoln("Start getting proxy ...")
+	SaveFile("./", SAVE_PATH, "")
+	for i := 1; i <= 500; i++ {
+		log.Println(UrlGetter(i))
+		GetProxy(UrlGetter(i))
+		time.Sleep(time.Second*5)
+	}
 }
